@@ -123,7 +123,7 @@
             const difference = Math.abs(ratio - goldenRatio);
 
             // 오차 범위에 따른 결과 메시지 출력
-            if (difference <= 0.02) {
+            if (difference <= 0.005) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
             } else if (difference <= 0.15) {
