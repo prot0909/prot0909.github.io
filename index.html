@@ -3,106 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>황금비 자동 계산기</title>
+    <title>통합 계산기 (기본 & 황금비)</title>
     <style>
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #e9ecef;
             margin: 0;
         }
-        .calculator {
+        
+        .app-container {
+            position: relative;
             background: #ffffff;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 350px;
+            max-width: 320px;
+            min-height: 400px;
         }
+
+        /* 전환 버튼 (우측 상단) */
+        .toggle-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #f1f3f5;
+            border: 1px solid #dee2e6;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #495057;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .toggle-btn:hover {
+            background-color: #e2e6ea;
+        }
+
         h2 {
-            margin-top: 0;
-            color: #333;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            color: #343a40;
+            font-size: 1.4rem;
+            text-align: center;
         }
+
+        /* ---------------- 기본 계산기 스타일 ---------------- */
+        #basicCalcScreen {
+            width: 100%;
+            height: 60px;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 2rem;
+            text-align: right;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            color: #212529;
+            outline: none;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .keypad button {
+            padding: 15px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #f1f3f5;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        
+        .keypad button:hover {
+            background-color: #e2e6ea;
+        }
+        
+        .keypad button.operator {
+            background-color: #ffe8cc;
+            color: #d9480f;
+            font-weight: bold;
+        }
+        .keypad button.operator:hover {
+            background-color: #ffd8a8;
+        }
+        
+        .keypad button.equal {
+            background-color: #339af0;
+            color: white;
+            grid-column: span 2;
+        }
+        .keypad button.equal:hover {
+            background-color: #228be6;
+        }
+        
+        .keypad button.clear {
+            background-color: #ffc9c9;
+            color: #c92a2a;
+        }
+        .keypad button.clear:hover {
+            background-color: #ffa8a8;
+        }
+
+
+        /* ---------------- 황금비 계산기 스타일 ---------------- */
         .input-group {
             margin-bottom: 15px;
             text-align: left;
         }
-        label {
+        .input-group label {
             display: block;
             font-size: 0.9rem;
-            color: #555;
+            color: #495057;
             margin-bottom: 5px;
         }
-        input {
+        .input-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid #ced4da;
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
-            transition: border-color 0.3s;
         }
-        input:focus {
+        .input-group input:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: #339af0;
         }
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: #f1f3f5;
+
+        .calc-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #339af0;
+            color: white;
+            border: none;
             border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .calc-btn:hover {
+            background-color: #228be6;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
         }
         .ratio {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #212529;
             margin-bottom: 10px;
         }
         .message {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
-            transition: color 0.3s;
         }
-        /* 상태별 텍스트 색상 */
-        .default { color: #6c757d; }
+        
+        /* 메시지 색상 */
+        .default { color: #868e96; }
         .golden { color: #20c997; }
         .close { color: #fd7e14; }
         .not-golden { color: #fa5252; }
+
     </style>
 </head>
 <body>
 
-    <div class="calculator">
-        <h2>황금비 계산기</h2>
-        
-        <div class="input-group">
-            <label for="width">가로 길이</label>
-            <input type="number" id="width" placeholder="예: 1618" oninput="calculateRatio()">
-        </div>
-        <div class="input-group">
-            <label for="height">세로 길이</label>
-            <input type="number" id="height" placeholder="예: 1000" oninput="calculateRatio()">
+    <div class="app-container">
+        <!-- 모드 전환 버튼 -->
+        <button class="toggle-btn" id="toggleModeBtn" onclick="toggleMode()">황금비 계산기 🔄</button>
+
+        <!-- 1. 기본 계산기 영역 (기본 화면) -->
+        <div id="basicCalculator">
+            <h2>기본 계산기</h2>
+            <input type="text" id="basicCalcScreen" readonly placeholder="0">
+            
+            <div class="keypad">
+                <button class="clear" onclick="clearScreen()">C</button>
+                <button onclick="appendValue('(')">(</button>
+                <button onclick="appendValue(')')">)</button>
+                <button class="operator" onclick="appendValue('/')">÷</button>
+                
+                <button onclick="appendValue('7')">7</button>
+                <button onclick="appendValue('8')">8</button>
+                <button onclick="appendValue('9')">9</button>
+                <button class="operator" onclick="appendValue('*')">×</button>
+                
+                <button onclick="appendValue('4')">4</button>
+                <button onclick="appendValue('5')">5</button>
+                <button onclick="appendValue('6')">6</button>
+                <button class="operator" onclick="appendValue('-')">-</button>
+                
+                <button onclick="appendValue('1')">1</button>
+                <button onclick="appendValue('2')">2</button>
+                <button onclick="appendValue('3')">3</button>
+                <button class="operator" onclick="appendValue('+')">+</button>
+                
+                <button onclick="appendValue('0')">0</button>
+                <button onclick="appendValue('.')">.</button>
+                <button class="equal" onclick="calculateBasic()">=</button>
+            </div>
         </div>
 
-        <div class="result-box">
-            <div class="ratio" id="ratioResult">비율: -</div>
-            <div class="message default" id="feedbackMessage">길이를 입력해주세요.</div>
+        <!-- 2. 황금비 계산기 영역 (숨김 처리) -->
+        <div id="goldenCalculator" style="display: none;">
+            <h2>황금비 계산기</h2>
+            
+            <div class="input-group">
+                <label for="width">가로 길이</label>
+                <input type="number" id="width" placeholder="예: 1618">
+            </div>
+            <div class="input-group">
+                <label for="height">세로 길이</label>
+                <input type="number" id="height" placeholder="예: 1000">
+            </div>
+
+            <!-- 계산하기 버튼 -->
+            <button class="calc-btn" onclick="calculateGoldenRatio()">계산하기</button>
+
+            <div class="result-box">
+                <div class="ratio" id="ratioResult">비율: -</div>
+                <div class="message default" id="feedbackMessage">길이를 입력하고 버튼을 눌러주세요.</div>
+            </div>
         </div>
+
     </div>
 
     <script>
-        function calculateRatio() {
-            // 입력값 가져오기
+        // --- 모드 전환 로직 ---
+        let isBasicMode = true;
+
+        function toggleMode() {
+            const basicDiv = document.getElementById('basicCalculator');
+            const goldenDiv = document.getElementById('goldenCalculator');
+            const toggleBtn = document.getElementById('toggleModeBtn');
+
+            isBasicMode = !isBasicMode;
+
+            if (isBasicMode) {
+                basicDiv.style.display = 'block';
+                goldenDiv.style.display = 'none';
+                toggleBtn.textContent = '황금비 계산기 🔄';
+            } else {
+                basicDiv.style.display = 'none';
+                goldenDiv.style.display = 'block';
+                toggleBtn.textContent = '기본 계산기 🔄';
+            }
+        }
+
+        // --- 기본 계산기 로직 ---
+        const screen = document.getElementById('basicCalcScreen');
+
+        function appendValue(value) {
+            if (screen.value === 'Error') screen.value = '';
+            screen.value += value;
+        }
+
+        function clearScreen() {
+            screen.value = '';
+        }
+
+        function calculateBasic() {
+            if (screen.value.trim() === '') return;
+            try {
+                // 입력된 식을 계산 (보안상 문자열 치환 후 Function 사용)
+                let expression = screen.value;
+                // 계산을 위해 안전한 수식만 평가
+                const result = new Function('return ' + expression)(); 
+                screen.value = Number.isInteger(result) ? result : result.toFixed(4).replace(/\.?0+$/, '');
+            } catch (error) {
+                screen.value = 'Error';
+            }
+        }
+
+        // --- 황금비 계산기 로직 ---
+        function calculateGoldenRatio() {
             const width = parseFloat(document.getElementById('width').value);
             const height = parseFloat(document.getElementById('height').value);
             const ratioResult = document.getElementById('ratioResult');
             const feedbackMessage = document.getElementById('feedbackMessage');
 
-            // 유효성 검사 (숫자가 아니거나 0 이하일 경우)
+            // 유효성 검사
             if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
                 ratioResult.textContent = '비율: -';
                 feedbackMessage.textContent = '올바른 길이를 입력해주세요.';
@@ -110,19 +306,19 @@
                 return;
             }
 
-            // 긴 변과 짧은 변을 구분하여 비율 계산
+            // 긴 변과 짧은 변 구분하여 비율 계산
             const longSide = Math.max(width, height);
             const shortSide = Math.min(width, height);
             const ratio = longSide / shortSide;
 
-            // 계산된 비율 출력 (소수점 3자리까지)
+            // 계산된 비율 출력
             ratioResult.textContent = `1 : ${ratio.toFixed(3)}`;
 
-            // 황금비 (1.618) 판단 로직
+            // 황금비(1.618) 판단 기준 (첨부 이미지 반영)
             const goldenRatio = 1.618;
             const difference = Math.abs(ratio - goldenRatio);
 
-            // 오차 범위에 따른 결과 메시지 출력
+            // 오차 범위 0.005 기준 적용
             if (difference <= 0.005) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
