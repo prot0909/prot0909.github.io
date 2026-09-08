@@ -343,10 +343,10 @@
             const silverDiff = Math.abs(ratio - silverRatio);
 
             // 0.001 이하의 미세한 오차는 완벽한 일치로 간주
-            if (goldenDiff <= 0.001) {
+            if (goldenDiff <= 0.00) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
-            } else if (silverDiff <= 0.001) {
+            } else if (silverDiff <= 0.00) {
                 feedbackMessage.textContent = '💎 완벽한 금강비입니다!';
                 feedbackMessage.className = 'message silver';
             } 
