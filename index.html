@@ -202,6 +202,7 @@
         
         .default { color: #868e96; }
         .golden { color: #20c997; }
+        .silver { color: #748ffc; } /* 금강비 전용 색상 추가 (파란계열) */
         .close { color: #fd7e14; }
         .not-golden { color: #fa5252; }
     </style>
@@ -246,8 +247,8 @@
             <h2>황금비 계산기</h2>
             
             <div class="input-group">
-                <label for="width">가로 길이.</label>
-                <input type="number" id="width" placeholder="예: 1618">
+                <label for="width">가로 길이</label>
+                <input type="number" id="width" placeholder="예: 1618 혹은 1414">
             </div>
             <div class="input-group">
                 <label for="height">세로 길이</label>
@@ -315,7 +316,7 @@
             }
         }
 
-        // 황금비 계산기 로직
+        // 황금/금강비 계산기 로직
         function calculateGoldenRatio() {
             const width = parseFloat(document.getElementById('width').value);
             const height = parseFloat(document.getElementById('height').value);
@@ -336,16 +337,28 @@
             ratioResult.textContent = `1 : ${ratio.toFixed(3)}`;
 
             const goldenRatio = 1.618;
-            const difference = Math.abs(ratio - goldenRatio);
+            const silverRatio = 1.414; // 금강비 추가
+            
+            const goldenDiff = Math.abs(ratio - goldenRatio);
+            const silverDiff = Math.abs(ratio - silverRatio);
 
-            if (difference <= 0.000) {
+            // 0.001 이하의 미세한 오차는 완벽한 일치로 간주
+            if (goldenDiff <= 0.001) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
-            } else if (difference <= 0.15) {
+            } else if (silverDiff <= 0.001) {
+                feedbackMessage.textContent = '💎 완벽한 금강비입니다!';
+                feedbackMessage.className = 'message silver';
+            } 
+            // 황금비와 금강비 중 어느 쪽에 더 가까운지 판별하여 메시지 출력
+            else if (goldenDiff <= 0.15 && goldenDiff < silverDiff) {
                 feedbackMessage.textContent = '👍 황금비에 근접했습니다.';
                 feedbackMessage.className = 'message close';
+            } else if (silverDiff <= 0.15 && silverDiff < goldenDiff) {
+                feedbackMessage.textContent = '👍 금강비에 근접했습니다.';
+                feedbackMessage.className = 'message close';
             } else {
-                feedbackMessage.textContent = '❌ 황금비가 아닙니다.';
+                feedbackMessage.textContent = '❌ 황금비/금강비가 아닙니다.';
                 feedbackMessage.className = 'message not-golden';
             }
         }
