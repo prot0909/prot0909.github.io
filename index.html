@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>통합 계산기 (기본 & 황금비)</title>
+    <title>황금비 계산기</title>
     <style>
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
@@ -18,40 +18,54 @@
         .app-container {
             position: relative;
             background: #ffffff;
-            padding: 2.5rem 2rem;
+            padding: 2rem 1.8rem;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 320px;
-            min-height: 400px;
+            max-width: 330px;
+            min-height: 480px;
+            box-sizing: border-box;
             overflow: hidden;
         }
 
-        /* 전환 버튼 (우측 상단) */
-        .toggle-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #f1f3f5;
-            border: 1px solid #dee2e6;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        /* 상단 3단 탭 네비게이션 */
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: #f1f3f5;
+            padding: 4px;
+            border-radius: 10px;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 8px 0;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
             color: #495057;
             cursor: pointer;
             transition: all 0.2s ease;
-            z-index: 10;
         }
-        .toggle-btn:hover {
-            background-color: #e2e6ea;
-            transform: scale(1.03);
+
+        .nav-tab:hover {
+            color: #212529;
+        }
+
+        .nav-tab.active {
+            background: #ffffff;
+            color: #339af0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
 
         h2 {
-            margin-top: 5px;
-            margin-bottom: 20px;
+            margin-top: 0;
+            margin-bottom: 15px;
             color: #343a40;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             text-align: center;
         }
 
@@ -74,15 +88,15 @@
         /* ---------------- 기본 계산기 스타일 ---------------- */
         #basicCalcScreen {
             width: 100%;
-            height: 60px;
+            height: 55px;
             background-color: #f8f9fa;
             border: 1px solid #ced4da;
             border-radius: 8px;
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: right;
             padding: 10px;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #212529;
             outline: none;
         }
@@ -90,12 +104,12 @@
         .keypad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
         
         .keypad button {
-            padding: 15px 0;
-            font-size: 1.2rem;
+            padding: 14px 0;
+            font-size: 1.1rem;
             border: none;
             border-radius: 8px;
             background-color: #f1f3f5;
@@ -137,42 +151,43 @@
             background-color: #ffa8a8;
         }
 
-        /* ---------------- 황금비 계산기 스타일 ---------------- */
+        /* ---------------- 입력 및 결과 공통 스타일 ---------------- */
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: left;
         }
         .input-group label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #495057;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
-            padding: 12px;
+            padding: 9px 12px;
             border: 1px solid #ced4da;
             border-radius: 8px;
             box-sizing: border-box;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: border-color 0.2s;
+            background-color: white;
         }
-        .input-group input:focus {
+        .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: #339af0;
         }
 
         .calc-btn {
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             background-color: #339af0;
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 5px;
             transition: background-color 0.2s, transform 0.1s;
         }
         .calc-btn:hover {
@@ -183,26 +198,40 @@
         }
 
         .result-box {
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 15px;
+            padding: 12px 15px;
             background-color: #f8f9fa;
             border-radius: 8px;
             text-align: center;
         }
         .ratio {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: bold;
             color: #212529;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .message {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
+            margin-bottom: 4px;
         }
-        
+
+        /* 황금비 보정 안내 박스 */
+        .add-info {
+            font-size: 0.82rem;
+            color: #3b5bdb;
+            background: #edf2ff;
+            border: 1px solid #bac8ff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
         .default { color: #868e96; }
         .golden { color: #20c997; }
-        .silver { color: #748ffc; } /* 금강비 전용 색상 추가 (파란계열) */
+        .silver { color: #748ffc; } 
         .close { color: #fd7e14; }
         .not-golden { color: #fa5252; }
     </style>
@@ -210,10 +239,16 @@
 <body>
 
     <div class="app-container">
-        <button class="toggle-btn" id="toggleModeBtn" onclick="toggleMode()">황금비 계산기 🔄</button>
+        <!-- 3개 선택 버튼 (탭 네비게이션) -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" id="tabBtn0" onclick="setMode(0)">기본 계산기</button>
+            <button class="nav-tab" id="tabBtn1" onclick="setMode(1)">비율 판별기</button>
+            <button class="nav-tab" id="tabBtn2" onclick="setMode(2)">비례 길이</button>
+        </div>
 
+        <!-- 1. 기본 계산기 -->
         <div id="basicCalculator" class="animated-view">
-            <h2>계산기</h2>
+            <h2>기본 계산기</h2>
             <input type="text" id="basicCalcScreen" readonly placeholder="0">
             
             <div class="keypad">
@@ -243,8 +278,9 @@
             </div>
         </div>
 
+        <!-- 2. 비율 판별기 -->
         <div id="goldenCalculator" style="display: none;">
-            <h2>황금비 계산기</h2>
+            <h2>비율 판별기</h2>
             
             <div class="input-group">
                 <label for="width">가로 길이</label>
@@ -255,46 +291,71 @@
                 <input type="number" id="height" placeholder="예: 1000">
             </div>
 
-            <button class="calc-btn" onclick="calculateGoldenRatio()">계산하기</button>
+            <button class="calc-btn" onclick="calculateGoldenRatio()">판별하기</button>
 
             <div class="result-box">
                 <div class="ratio" id="ratioResult">비율: -</div>
                 <div class="message default" id="feedbackMessage">길이를 입력하고 버튼을 눌러주세요.</div>
+                
+                <!-- 황금비 맞춤 추가 길이 안내 영역 -->
+                <div class="add-info" id="goldenAddBox" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- 3. 비례 길이 계산기 -->
+        <div id="proportionalCalculator" style="display: none;">
+            <h2>비례 길이 계산기</h2>
+            
+            <div class="input-group">
+                <label for="targetRatio">목표 비율</label>
+                <select id="targetRatio">
+                    <option value="1.618">황금비 (1 : 1.618)</option>
+                    <option value="1.414">금강비 (1 : 1.414)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="knownLength">현재 변의 길이</label>
+                <input type="number" id="knownLength" placeholder="예: 1000">
+            </div>
+            <div class="input-group">
+                <label for="sideType">입력한 길이는 어떤 변인가요?</label>
+                <select id="sideType">
+                    <option value="short">짧은 변 기준 (긴 변 구하기)</option>
+                    <option value="long">긴 변 기준 (짧은 변 구하기)</option>
+                </select>
+            </div>
+
+            <button class="calc-btn" onclick="calculateProportional()">나머지 길이 구하기</button>
+
+            <div class="result-box">
+                <div class="ratio" id="propResult">나머지 길이: -</div>
+                <div class="message default" id="propFeedback">옵션을 선택하고 길이를 입력해주세요.</div>
             </div>
         </div>
     </div>
 
     <script>
-        let isBasicMode = true;
+        let currentMode = 0; 
+        const modes = ['basicCalculator', 'goldenCalculator', 'proportionalCalculator'];
 
-        function toggleMode() {
-            const basicDiv = document.getElementById('basicCalculator');
-            const goldenDiv = document.getElementById('goldenCalculator');
-            const toggleBtn = document.getElementById('toggleModeBtn');
+        // 상단 탭 버튼 클릭 시 화면 전환
+        function setMode(modeIndex) {
+            if (currentMode === modeIndex) return;
 
-            isBasicMode = !isBasicMode;
+            const currentDiv = document.getElementById(modes[currentMode]);
+            currentDiv.classList.remove('animated-view');
+            currentDiv.style.display = 'none';
+            document.getElementById(`tabBtn${currentMode}`).classList.remove('active');
 
-            // 기존 애니메이션 클래스 초기화
-            basicDiv.classList.remove('animated-view');
-            goldenDiv.classList.remove('animated-view');
-
-            if (isBasicMode) {
-                goldenDiv.style.display = 'none';
-                basicDiv.style.display = 'block';
-                // 리플로우 강제 트리거 후 애니메이션 클래스 재적용
-                void basicDiv.offsetWidth; 
-                basicDiv.classList.add('animated-view');
-                toggleBtn.textContent = '황금비 계산기 🔄';
-            } else {
-                basicDiv.style.display = 'none';
-                goldenDiv.style.display = 'block';
-                void goldenDiv.offsetWidth;
-                goldenDiv.classList.add('animated-view');
-                toggleBtn.textContent = '기본 계산기 🔄';
-            }
+            currentMode = modeIndex;
+            const nextDiv = document.getElementById(modes[currentMode]);
+            nextDiv.style.display = 'block';
+            void nextDiv.offsetWidth; 
+            nextDiv.classList.add('animated-view');
+            document.getElementById(`tabBtn${currentMode}`).classList.add('active');
         }
 
-        // 기본 계산기 로직
+        // 1. 기본 계산기 로직
         const screen = document.getElementById('basicCalcScreen');
 
         function appendValue(value) {
@@ -316,17 +377,19 @@
             }
         }
 
-        // 황금/금강비 계산기 로직
+        // 2. 비율 판별기 로직
         function calculateGoldenRatio() {
             const width = parseFloat(document.getElementById('width').value);
             const height = parseFloat(document.getElementById('height').value);
             const ratioResult = document.getElementById('ratioResult');
             const feedbackMessage = document.getElementById('feedbackMessage');
+            const goldenAddBox = document.getElementById('goldenAddBox');
 
             if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
                 ratioResult.textContent = '비율: -';
                 feedbackMessage.textContent = '올바른 길이를 입력해주세요.';
                 feedbackMessage.className = 'message default';
+                goldenAddBox.style.display = 'none';
                 return;
             }
 
@@ -334,24 +397,22 @@
             const shortSide = Math.min(width, height);
             const ratio = longSide / shortSide;
 
-            ratioResult.textContent = `1 : ${ratio.toFixed(3)}`;
+            ratioResult.textContent = `비율 = 1 : ${ratio.toFixed(3)}`;
 
             const goldenRatio = 1.618;
-            const silverRatio = 1.414; // 금강비 추가
+            const silverRatio = 1.414;
             
             const goldenDiff = Math.abs(ratio - goldenRatio);
             const silverDiff = Math.abs(ratio - silverRatio);
 
-            // 0.001 이하의 미세한 오차는 완벽한 일치로 간주
-            if (goldenDiff <= 0.00) {
+            // 판별 메시지 출력
+            if (goldenDiff <= 0.001) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
-            } else if (silverDiff <= 0.00) {
+            } else if (silverDiff <= 0.001) {
                 feedbackMessage.textContent = '💎 완벽한 금강비입니다!';
                 feedbackMessage.className = 'message silver';
-            } 
-            // 황금비와 금강비 중 어느 쪽에 더 가까운지 판별하여 메시지 출력
-            else if (goldenDiff <= 0.15 && goldenDiff < silverDiff) {
+            } else if (goldenDiff <= 0.15 && goldenDiff < silverDiff) {
                 feedbackMessage.textContent = '👍 황금비에 근접했습니다.';
                 feedbackMessage.className = 'message close';
             } else if (silverDiff <= 0.15 && silverDiff < goldenDiff) {
@@ -361,6 +422,75 @@
                 feedbackMessage.textContent = '❌ 황금비/금강비가 아닙니다.';
                 feedbackMessage.className = 'message not-golden';
             }
+
+            // 황금비(1:1.618)를 만들기 위해 가로/세로에 얼마나 더 추가해야 하는지 계산
+            goldenAddBox.style.display = 'block';
+
+            if (goldenDiff <= 0.001) {
+                goldenAddBox.innerHTML = '💡 <strong>황금비 팁:</strong> 이미 완벽한 황금비입니다!';
+            } else {
+                let addMsg = '';
+
+                if (width === height) {
+                    const addAmount = (width * 1.618 - width).toFixed(1);
+                    addMsg = `💡 <strong>황금비(1:1.618) 팁:</strong><br>가로 또는 세로에 <strong>+${addAmount}</strong>를 추가해보세요.`;
+                } else if (width > height) {
+                    // 가로가 더 긴 상태
+                    const targetWidth = height * 1.618;
+                    if (width < targetWidth) {
+                        const needAdd = (targetWidth - width).toFixed(1);
+                        addMsg = `💡 <strong>황금비(1:1.618) 팁:</strong><br>가로에 <strong>+${needAdd}</strong>를 더 추가해보세요.`;
+                    } else {
+                        const targetHeight = width / 1.618;
+                        const needAdd = (targetHeight - height).toFixed(1);
+                        addMsg = `💡 <strong>황금비(1:1.618) 팁:</strong><br>세로에 <strong>+${needAdd}</strong>를 더 추가해보세요.`;
+                    }
+                } else {
+                    // 세로가 더 긴 상태
+                    const targetHeight = width * 1.618;
+                    if (height < targetHeight) {
+                        const needAdd = (targetHeight - height).toFixed(1);
+                        addMsg = `💡 <strong>황금비(1:1.618) 팁:</strong><br>세로에 <strong>+${needAdd}</strong>를 더 추가해보세요.`;
+                    } else {
+                        const targetWidth = height / 1.618;
+                        const needAdd = (targetWidth - width).toFixed(1);
+                        addMsg = `💡 <strong>황금비(1:1.618) 팁:</strong><br>가로에 <strong>+${needAdd}</strong>를 더 추가해보세요.`;
+                    }
+                }
+                goldenAddBox.innerHTML = addMsg;
+            }
+        }
+
+        // 3. 비례 길이 계산기 로직
+        function calculateProportional() {
+            const targetRatio = parseFloat(document.getElementById('targetRatio').value);
+            const knownLength = parseFloat(document.getElementById('knownLength').value);
+            const sideType = document.getElementById('sideType').value;
+            const propResult = document.getElementById('propResult');
+            const propFeedback = document.getElementById('propFeedback');
+
+            if (isNaN(knownLength) || knownLength <= 0) {
+                propResult.textContent = '나머지 길이: -';
+                propFeedback.textContent = '올바른 기준 길이를 입력해주세요.';
+                propFeedback.className = 'message default';
+                return;
+            }
+
+            let calculatedLength = 0;
+
+            if (sideType === 'short') {
+                calculatedLength = knownLength * targetRatio;
+            } else {
+                calculatedLength = knownLength / targetRatio;
+            }
+
+            propResult.textContent = `나머지 길이: ${calculatedLength.toFixed(1)}`;
+            
+            const ratioName = targetRatio === 1.618 ? '황금비' : '금강비';
+            const colorClass = targetRatio === 1.618 ? 'golden' : 'silver';
+            
+            propFeedback.textContent = `입력하신 길이에 맞춘 ${ratioName}입니다.`;
+            propFeedback.className = `message ${colorClass}`;
         }
     </script>
 
