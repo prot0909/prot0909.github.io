@@ -409,7 +409,7 @@
             if (goldenDiff <= 0.00) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
-            } else if (silverDiff <= 0.001) {
+            } else if (silverDiff <= 0.00) {
                 feedbackMessage.textContent = '💎 완벽한 금강비입니다!';
                 feedbackMessage.className = 'message silver';
             } else if (goldenDiff <= 0.15 && goldenDiff < silverDiff) {
