@@ -130,6 +130,7 @@
             color: #d9480f;
             font-weight: bold;
         }
+
         .keypad button.operator:hover {
             background-color: #ffd8a8;
         }
@@ -139,6 +140,7 @@
             color: white;
             grid-column: span 2;
         }
+
         .keypad button.equal:hover {
             background-color: #228be6;
         }
@@ -147,6 +149,7 @@
             background-color: #ffc9c9;
             color: #c92a2a;
         }
+
         .keypad button.clear:hover {
             background-color: #ffa8a8;
         }
@@ -156,12 +159,14 @@
             margin-bottom: 10px;
             text-align: left;
         }
+
         .input-group label {
             display: block;
             font-size: 0.85rem;
             color: #495057;
             margin-bottom: 4px;
         }
+
         .input-group input, .input-group select {
             width: 100%;
             padding: 9px 12px;
@@ -172,6 +177,7 @@
             transition: border-color 0.2s;
             background-color: white;
         }
+
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: #339af0;
@@ -190,9 +196,11 @@
             margin-top: 5px;
             transition: background-color 0.2s, transform 0.1s;
         }
+
         .calc-btn:hover {
             background-color: #228be6;
         }
+
         .calc-btn:active {
             transform: scale(0.98);
         }
@@ -204,12 +212,14 @@
             border-radius: 8px;
             text-align: center;
         }
+
         .ratio {
             font-size: 1.15rem;
             font-weight: bold;
             color: #212529;
             margin-bottom: 6px;
         }
+
         .message {
             font-size: 0.9rem;
             font-weight: bold;
@@ -397,7 +407,7 @@
             const shortSide = Math.min(width, height);
             const ratio = longSide / shortSide;
 
-            ratioResult.textContent = `비율 = 1 : ${ratio.toFixed(3)}`;
+            ratioResult.textContent = `비율 = 1 : ${Math.trunc(ratio * 1000) / 1000}`;
 
             const goldenRatio = 1.618;
             const silverRatio = 1.414;
@@ -406,10 +416,10 @@
             const silverDiff = Math.abs(ratio - silverRatio);
 
             // 판별 메시지 출력
-            if (goldenDiff <= 0.00) {
+            if (goldenDiff <= 0.000) {
                 feedbackMessage.textContent = '✨ 완벽한 황금비입니다!';
                 feedbackMessage.className = 'message golden';
-            } else if (silverDiff <= 0.00) {
+            } else if (silverDiff <= 0.000) {
                 feedbackMessage.textContent = '💎 완벽한 금강비입니다!';
                 feedbackMessage.className = 'message silver';
             } else if (goldenDiff <= 0.15 && goldenDiff < silverDiff) {
@@ -484,7 +494,7 @@
                 calculatedLength = knownLength / targetRatio;
             }
 
-            propResult.textContent = `나머지 길이: ${calculatedLength.toFixed(1)}`;
+            propResult.textContent = `나머지 길이: ${Math.trunc(calculatedLength * 1000) / 1000}`;
             
             const ratioName = targetRatio === 1.618 ? '황금비' : '금강비';
             const colorClass = targetRatio === 1.618 ? 'golden' : 'silver';
